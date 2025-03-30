@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Debt Freedom Quest</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            color: #333;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #2e8b57;
+        }
+        .level {
+            background: #fff;
+            margin: 15px auto;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+            max-width: 700px;
+        }
+        .level.completed {
+            background: #e0ffe0;
+            border-left: 10px solid #2e8b57;
+        }
+        .level h2 {
+            margin: 0;
+            color: #2e8b57;
+        }
+        .level p {
+            margin: 5px 0 10px;
+        }
+        .btn {
+            background: #2e8b57;
+            color: #fff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn:disabled {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <h1>Debt Freedom Quest</h1>
+    <div id="quest"></div>
+    <script>
+        const levels = [
+            {month: "April 2025", goal: "Start the journey. Make minimum payments. Reduce debt by 5%."},
+            {month: "May 2025", goal: "Pay off Hyba. Continue the plan. Add early payments."},
+            {month: "June 2025", goal: "Hyba closed! Begin paying AirPods. Get closer to freedom."},
+            {month: "July 2025", goal: "AirPods paid. Start Credit24. Add extra 100€ if possible."},
+            {month: "August 2025", goal: "Keep up the pace. Credit24 is going down."},
+            {month: "September 2025", goal: "Use snowball to start reducing Ferratum."},
+            {month: "October 2025", goal: "Continue Ferratum. Free up budget."},
+            {month: "November 2025", goal: "Ferratum paid off! Focus on PlacetGroup."},
+            {month: "December 2025", goal: "Final hit on PlacetGroup. Big early payment."},
+            {month: "January 2026", goal: "You’re free! Celebrate your financial freedom!"}
+        ];
+
+        const container = document.getElementById("quest");
+
+        levels.forEach((level, index) => {
+            const div = document.createElement("div");
+            div.className = "level";
+            div.innerHTML = `
+                <h2>${level.month}</h2>
+                <p>${level.goal}</p>
+                <button class="btn" onclick="completeLevel(this)">Mark as Done</button>
+            `;
+            container.appendChild(div);
+        });
+
+        function completeLevel(button) {
+            button.parentElement.classList.add("completed");
+            button.disabled = true;
+            button.innerText = "Completed";
+        }
+    </script>
+</body>
+</html>

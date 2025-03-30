@@ -1,0 +1,250 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Финансовый Квест</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f9f9f9;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: #2e8b57;
+    }
+    .progress-bar {
+      height: 25px;
+      background: #e0e0e0;
+      border-radius: 15px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+    .progress-bar-fill {
+      height: 100%;
+      width: 0;
+      background: #2e8b57;
+      text-align: center;
+      color: white;
+      line-height: 25px;
+      transition: width 0.3s;
+    }
+    #stats {
+      text-align: center;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .month {
+      background: #fff;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+    .month-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+    }
+    .month-details {
+      display: none;
+      margin-top: 10px;
+    }
+    .month.completed {
+      background: #d4ffd4;
+    }
+    .checkbox {
+      margin: 5px 0;
+    }
+    .toggle-btn {
+      background: #2e8b57;
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 5px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Финансовый Квест</h1>
+  <div class="progress-bar">
+    <div class="progress-bar-fill" id="progress-fill">0%</div>
+  </div>
+  <div id="stats">Прогресс: 0 из 10</div>
+  <div id="quest"></div>
+
+  <script>
+    const months = [
+      {
+        month: "Апрель 2025",
+        items: [
+          "PlacetGroup — 150€ (обязательный)",
+          "Ferratum — 130€ (обязательный)",
+          "Credit24 — 60€ (обязательный)",
+          "Hyba — 50€ (обязательный)",
+          "Личные расходы — 150€ (топливо, еда, телефон и т.д.)"
+        ]
+      },
+      {
+        month: "Май 2025",
+        items: [
+          "PlacetGroup — 150€",
+          "Ferratum — 130€",
+          "Credit24 — 60€",
+          "Hyba — 50€",
+          "Личные расходы — 150€"
+        ]
+      },
+      {
+        month: "Июнь 2025",
+        items: [
+          "PlacetGroup — 150€",
+          "Ferratum — 130€",
+          "Credit24 — 60€",
+          "AirPods — 390€ (досрочный)",
+          "Личные расходы — 150€"
+        ]
+      },
+      {
+        month: "Июль 2025",
+        items: [
+          "PlacetGroup — 150€",
+          "Ferratum — 130€",
+          "Credit24 — 60€",
+          "Личные расходы — 150€"
+        ]
+      },
+      {
+        month: "Август 2025",
+        items: [
+          "PlacetGroup — 150€",
+          "Ferratum — 130€",
+          "Credit24 — 60€",
+          "Личные расходы — 150€"
+        ]
+      },
+      {
+        month: "Сентябрь 2025",
+        items: [
+          "PlacetGroup — 150€ + 570€ (досрочный)",
+          "Ferratum — 130€",
+          "Credit24 — 60€",
+          "Личные расходы — 150€"
+        ]
+      },
+      {
+        month: "Октябрь 2025",
+        items: [
+          "PlacetGroup — 150€ + 340€",
+          "Ferratum — 130€",
+          "Credit24 — 60€",
+          "Личные расходы — 150€"
+        ]
+      },
+      {
+        month: "Ноябрь 2025",
+        items: [
+          "PlacetGroup — 150€ + 970€",
+          "Ferratum — 130€",
+          "Credit24 — 60€",
+          "Личные расходы — 150€"
+        ]
+      },
+      {
+        month: "Декабрь 2025",
+        items: [
+          "PlacetGroup — 150€ + 2089€",
+          "Ferratum — 130€ + 2001€",
+          "Credit24 — 60€ + 380€",
+          "Личные расходы — 150€"
+        ]
+      },
+      {
+        month: "Январь 2026",
+        items: [
+          "Ничего! Ты свободен от долгов!",
+          "Награда: Подарок себе, уверенность, спокойствие"
+        ]
+      }
+    ];
+
+    const quest = document.getElementById("quest");
+    const progressFill = document.getElementById("progress-fill");
+    const stats = document.getElementById("stats");
+    let completedCount = 0;
+
+    function updateProgress() {
+      const percent = Math.round((completedCount / months.length) * 100);
+      progressFill.style.width = percent + "%";
+      progressFill.innerText = percent + "%";
+      stats.innerText = `Прогресс: ${completedCount} из ${months.length}`;
+    }
+
+    function toggleMonth(index) {
+      const detail = document.getElementById("details-" + index);
+      detail.style.display = detail.style.display === "none" ? "block" : "none";
+    }
+
+    function toggleMonthStatus(index, btn) {
+      const monthDiv = document.getElementById("month-" + index);
+      const allBoxes = document.querySelectorAll(`.month[data-index='${index}'] .month-details input[type='checkbox']`);
+      const allChecked = Array.from(allBoxes).every(chk => chk.checked);
+
+      if (monthDiv.classList.contains("completed")) {
+        monthDiv.classList.remove("completed");
+        completedCount--;
+        btn.innerText = "Отметить как выполнено";
+      } else if (allChecked) {
+        monthDiv.classList.add("completed");
+        completedCount++;
+        btn.innerText = "Снять отметку";
+      } else {
+        alert("Отметьте все платежи, прежде чем подтвердить выполнение месяца.");
+        return;
+      }
+
+      updateProgress();
+    }
+
+    months.forEach((month, index) => {
+      const div = document.createElement("div");
+      div.className = "month";
+      div.setAttribute("id", "month-" + index);
+      div.setAttribute("data-index", index);
+
+      const header = document.createElement("div");
+      header.className = "month-header";
+      header.innerHTML = `<strong>${month.month}</strong><button class="toggle-btn" onclick="toggleMonth(${index})">Показать</button>`;
+
+      const details = document.createElement("div");
+      details.className = "month-details";
+      details.id = "details-" + index;
+      month.items.forEach((item, i) => {
+        const checkbox = document.createElement("div");
+        checkbox.className = "checkbox";
+        checkbox.innerHTML = `<label><input type="checkbox"> ${item}</label>`;
+        details.appendChild(checkbox);
+      });
+
+      const btn = document.createElement("button");
+      btn.className = "toggle-btn";
+      btn.innerText = "Отметить как выполнено";
+      btn.onclick = () => toggleMonthStatus(index, btn);
+
+      details.appendChild(btn);
+      div.appendChild(header);
+      div.appendChild(details);
+      quest.appendChild(div);
+    });
+
+    updateProgress();
+  </script>
+</body>
+</html>
